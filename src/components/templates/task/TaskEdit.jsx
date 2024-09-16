@@ -8,19 +8,49 @@ export default function TaskEdit({
   title,
   description,
   time,
+  type,
+  priority,
   onSave,
   onCancel,
+  onRemove,
 }) {
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
   const [editTime, setEditTime] = useState(time);
+  const [editType, setEditType] = useState(type);
+  const [editPriority, setEditPriority] = useState(priority);
 
   const handleSave = () => {
-    onSave({ title: editTitle, description: editDescription, time: editTime });
+    onSave({
+      title: editTitle,
+      description: editDescription,
+      time: editTime,
+      priority: editPriority,
+    });
   };
 
   return (
     <div className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg">
+      <div className="mb-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-lg">Priority #{editPriority}</span>
+        </div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-4 cursor-pointer"
+          onClick={() => onCancel(id)}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18 18 6M6 6l12 12"
+          />
+        </svg>
+      </div>
       <input
         type="text"
         value={editTitle}
@@ -36,14 +66,18 @@ export default function TaskEdit({
       />
       <div className="flex gap-3">
         <TimePicker setValue={setEditTime} value={editTime} />
-        <Dropdown items={Object.values(TaskTypes)} selectItem="value" />
+        <Dropdown
+          items={Object.values(TaskTypes)}
+          value={editType}
+          onChange={(e) => setEditType(e)}
+        />
       </div>
       <div className="flex justify-end gap-2 mt-2">
         <button
-          onClick={() => onCancel(id)}
+          onClick={() => onRemove(id)}
           className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
         >
-          Cancel
+          Remove
         </button>
         <button
           onClick={handleSave}

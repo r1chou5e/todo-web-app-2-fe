@@ -9,42 +9,45 @@ import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx';
 import { useState, useRef, useEffect } from 'react';
 
-export default function Dropdown({ items, selectItem }) {
-  const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState(items[0]);
-  const inputRef = useRef(null); // To reference the input element
-  const [inputWidth, setInputWidth] = useState('auto'); // State to store the input width
+export default function Dropdown({ items, value, onChange }) {
+  // Tìm item tương ứng với value truyền vào
+  const [selected, setSelected] = useState(
+    items.find((item) => item.value === String(value)) || items[0]
+  );
+  const inputRef = useRef(null);
+  const [inputWidth, setInputWidth] = useState('auto');
 
-  const filteredItems =
-    query === ''
-      ? items
-      : items.filter((item) => {
-          return item[selectItem].toLowerCase().includes(query.toLowerCase());
-        });
-
-  // Effect to update the input width on mount and when input width changes
   useEffect(() => {
     if (inputRef.current) {
       setInputWidth(`${inputRef.current.offsetWidth}px`);
     }
-  }, [inputRef.current]);
+  }, []);
+
+  // Update selected item khi prop value thay đổi
+  useEffect(() => {
+    const foundItem = items.find((item) => item.value === String(value));
+    if (foundItem) {
+      setSelected(foundItem);
+    }
+  }, [value, items]);
 
   return (
     <div>
       <Combobox
         value={selected}
-        onChange={(value) => setSelected(value)}
-        onClose={() => setQuery('')}
+        onChange={(item) => {
+          setSelected(item);
+          onChange(item.value); // Trả về giá trị (number) khi thay đổi
+        }}
       >
         <div className="relative">
           <ComboboxInput
-            ref={inputRef} // Attach ref to the input
+            ref={inputRef}
             className={clsx(
               'w-full rounded-lg border border-gray-300 bg-white py-2.5 pr-8 pl-3 text-sm text-gray-900',
               'focus:ring-1 focus:border-gray-500'
             )}
-            displayValue={(item) => item?.[selectItem]}
-            onChange={(event) => setQuery(event.target.value)}
+            displayValue={(item) => item?.label}
           />
           <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronDownIcon
@@ -55,19 +58,19 @@ export default function Dropdown({ items, selectItem }) {
         </div>
 
         <ComboboxOptions
-          style={{ width: inputWidth }} // Apply dynamic width
+          style={{ width: inputWidth }}
           className={clsx(
             'absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'
           )}
         >
-          {filteredItems.length === 0 && (
+          {items.length === 0 && (
             <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
               No results found.
             </div>
           )}
-          {filteredItems.map((item) => (
+          {items.map((item, index) => (
             <ComboboxOption
-              key={item.id}
+              key={index}
               value={item}
               className={({ active }) =>
                 clsx(
@@ -86,7 +89,7 @@ export default function Dropdown({ items, selectItem }) {
                       selected ? 'font-medium' : 'font-normal'
                     )}
                   >
-                    {item[selectItem]}
+                    {item.label}
                   </span>
                   {selected ? (
                     <span

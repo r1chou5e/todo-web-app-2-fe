@@ -1,11 +1,25 @@
-import React from 'react';
+import { useRef, useEffect } from 'react';
 import RoundCheckbox from '../../controls/checkbox/RoundCheckbox';
 import Tag from '../../controls/tag/Tag';
-import { TaskTypeColorVariants } from '../../../constants';
+import { TaskTypeColorVariants, TaskTypes } from '../../../constants';
+import { getLabelFromValue } from '../../../utils/mapping';
 
 export default function Task({ id, title, description, type, time, onEdit }) {
+  const taskRef = useRef(null);
+
+  useEffect(() => {
+    const taskElement = taskRef.current;
+    taskElement.classList.add('task-enter');
+    setTimeout(() => {
+      taskElement.classList.add('task-enter-active');
+    }, 10);
+  }, []);
+
   return (
-    <div className="flex items-center gap-4 bg-[#FFFFFF] px-4 py-3 rounded-lg shadow-lg min-h-[72px] justify-between transition-transform transform hover:scale-105">
+    <div
+      ref={taskRef}
+      className="flex items-center gap-4 bg-[#FFFFFF] px-4 py-3 rounded-lg shadow-lg min-h-[72px] justify-between transition-transform transform hover:scale-105"
+    >
       <div className="flex items-center gap-4">
         <RoundCheckbox />
         <div className="flex flex-col justify-center">
@@ -13,7 +27,12 @@ export default function Task({ id, title, description, type, time, onEdit }) {
             <p className="text-black text-base font-medium leading-normal line-clamp-1">
               {title}
             </p>
-            <Tag colorVariant={TaskTypeColorVariants[type]} text={type} />
+            <Tag
+              colorVariant={
+                TaskTypeColorVariants[getLabelFromValue(type, TaskTypes)]
+              }
+              text={getLabelFromValue(type, TaskTypes)}
+            />
           </div>
           <p className="text-neutral-500 text-sm font-normal leading-normal line-clamp-2">
             {description}

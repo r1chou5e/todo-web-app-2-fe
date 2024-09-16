@@ -7,19 +7,19 @@ export const TaskTypeColorVariants = {
 
 export const TaskTypes = {
   Study: {
-    label: '1',
-    value: 'Study',
+    value: '1',
+    label: 'Study',
   },
   Exercise: {
-    label: '2',
-    value: 'Exercise',
+    value: '2',
+    label: 'Exercise',
   },
   Work: {
-    label: '3',
-    value: 'Work',
+    value: '3',
+    label: 'Work',
   },
   Personal: {
-    label: '4',
-    value: 'Personal',
+    value: '4',
+    label: 'Personal',
   },
 };
