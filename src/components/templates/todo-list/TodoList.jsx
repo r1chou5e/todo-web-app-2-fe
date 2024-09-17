@@ -65,7 +65,7 @@ export default function TodoList() {
         <p className="text-black tracking-light text-[32px] font-bold leading-tight min-w-72 mb-4">
           Today
         </p>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-5">
           {tasks.map((task, index) =>
             task.editMode ? (
               <TaskEdit
@@ -75,7 +75,6 @@ export default function TodoList() {
                 description={task.description}
                 time={task.time}
                 type={task.type}
-                priority={index + 1}
                 onCancel={closeEdit}
                 onSave={saveTask}
               />
@@ -105,12 +104,14 @@ export default function TodoList() {
           )}
         </div>
         {!isAdding && (
-          <button
-            className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4 transition-all duration-300 hover:bg-blue-600 transform hover:scale-105"
-            onClick={addTask}
-          >
-            Add Task
-          </button>
+          <div className="flex justify-end">
+            <button
+              className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4 transition-all duration-300 hover:bg-blue-600 transform hover:scale-105"
+              onClick={addTask}
+            >
+              Add Task
+            </button>
+          </div>
         )}
       </div>
     </div>

@@ -9,23 +9,20 @@ export default function TaskEdit({
   description,
   time,
   type,
-  priority,
   onSave,
   onCancel,
   onRemove,
 }) {
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
-  const [editTime, setEditTime] = useState(time);
+  const [editTime, setEditTime] = useState(time); // TODO: cần sử lý logic khi chọn giờ thì phải là giờ sau giờ hiện tại, nếu giờ là giờ nhỏ hơn giờ hiện tại thì là giờ hôm sau
   const [editType, setEditType] = useState(type);
-  const [editPriority, setEditPriority] = useState(priority);
 
   const handleSave = () => {
     onSave({
       title: editTitle,
       description: editDescription,
       time: editTime,
-      priority: editPriority,
     });
   };
 
@@ -33,7 +30,7 @@ export default function TaskEdit({
     <div className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-lg">Priority #{editPriority}</span>
+          <span className="font-bold text-lg">Edit task</span>
         </div>
         <svg
           xmlns="http://www.w3.org/2000/svg"

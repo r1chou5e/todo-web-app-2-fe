@@ -3,9 +3,16 @@ import RoundCheckbox from '../../controls/checkbox/RoundCheckbox';
 import Tag from '../../controls/tag/Tag';
 import { TaskTypeColorVariants, TaskTypes } from '../../../constants';
 import { getLabelFromValue } from '../../../utils/mapping';
+import './style/Task.css';
+import { timeDiffFromNow } from '../../../utils/formatting';
 
 export default function Task({ id, title, description, type, time, onEdit }) {
   const taskRef = useRef(null);
+
+  const taskAlert = () => {
+    console.log(timeDiffFromNow(time));
+    return timeDiffFromNow(time).diffSeconds < 0;
+  };
 
   useEffect(() => {
     const taskElement = taskRef.current;
@@ -18,7 +25,7 @@ export default function Task({ id, title, description, type, time, onEdit }) {
   return (
     <div
       ref={taskRef}
-      className="flex items-center gap-4 bg-[#FFFFFF] px-4 py-3 rounded-lg shadow-lg min-h-[72px] justify-between transition-transform transform hover:scale-105"
+      className="task-hover relative flex items-center gap-4 bg-[#FFFFFF] px-4 py-3 rounded-lg shadow-lg min-h-[72px] justify-between transition-transform transform hover:scale-105 group"
     >
       <div className="flex items-center gap-4">
         <RoundCheckbox />
@@ -62,6 +69,11 @@ export default function Task({ id, title, description, type, time, onEdit }) {
           </svg>
         </div>
       </div>
+      {taskAlert() && (
+        <div className="task-warning">
+          <span className="text-xs font-bold">!</span>
+        </div>
+      )}
     </div>
   );
 }
