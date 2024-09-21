@@ -10,7 +10,6 @@ export default function Task({ id, title, description, type, time, onEdit }) {
   const taskRef = useRef(null);
 
   const taskAlert = () => {
-    console.log(timeDiffFromNow(time));
     return timeDiffFromNow(time).diffSeconds < 0;
   };
 
@@ -70,8 +69,11 @@ export default function Task({ id, title, description, type, time, onEdit }) {
         </div>
       </div>
       {taskAlert() && (
-        <div className="task-warning">
+        <div className="task-warning relative">
           <span className="text-xs font-bold">!</span>
+          <div className="tooltip absolute top-[-30px] left-[-10px] bg-black text-white text-xs rounded py-1 px-2 opacity-0 transition-opacity duration-300">
+            Task overdue
+          </div>
         </div>
       )}
     </div>
