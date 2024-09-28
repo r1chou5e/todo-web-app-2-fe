@@ -24,7 +24,7 @@ export default function Task({ id, title, description, type, time, onEdit }) {
   return (
     <div
       ref={taskRef}
-      className="task-hover relative flex items-center gap-4 bg-[#FFFFFF] px-4 py-3 rounded-lg shadow-lg min-h-[72px] justify-between transition-transform transform hover:scale-105 group"
+      className="task-hover relative flex items-center gap-4 bg-[#FFFFFF] px-4 py-3 rounded-xl shadow-lg min-h-[72px] justify-between transition-transform transform hover:scale-105 group"
     >
       <div className="flex items-center gap-4">
         <RoundCheckbox />

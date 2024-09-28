@@ -12,6 +12,7 @@ export default function TaskEdit({
   onSave,
   onCancel,
   onRemove,
+  addMode,
 }) {
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
@@ -27,7 +28,7 @@ export default function TaskEdit({
   };
 
   return (
-    <div className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg">
+    <div className="bg-[#FFFFFF] p-4 rounded-xl shadow-lg">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="font-bold text-lg">Edit task</span>
@@ -70,18 +71,21 @@ export default function TaskEdit({
         />
       </div>
       <div className="flex justify-end gap-2 mt-2">
-        <button
-          onClick={() => onRemove(id)}
-          className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
-        >
-          Remove
-        </button>
+        {!addMode && (
+          <button
+            onClick={() => onRemove(id)}
+            className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-xl"
+          >
+            Remove
+          </button>
+        )}
         <button
           onClick={handleSave}
-          className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+          className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-xl"
         >
-          Save
+          {addMode ? 'Confirm' : 'Update'}
         </button>
+        <div></div>
       </div>
     </div>
   );
