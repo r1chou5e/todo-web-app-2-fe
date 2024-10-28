@@ -62,6 +62,7 @@ export default function RegisterForm() {
           placeholder="Auto-generated username"
           label="Username"
           value={username}
+          onChange={setUsername}
           readOnly
         />
       </div>
