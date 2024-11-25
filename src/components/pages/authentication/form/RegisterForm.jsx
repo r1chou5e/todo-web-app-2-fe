@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import InputText from '../../../controls/input-text/InputText';
 import { registerUser } from '../../../../api/auth.service';
+import { useLoading } from '../../../../context/LoadingProvider';
 
-export default function RegisterForm() {
+export default function RegisterForm({ onRegisterSuccessfully }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
 
-  // Validation functions
+  const { setIsLoading } = useLoading();
+
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
   const validatePassword = (password) => password.length >= 6;
   const validateConfirmPassword = (password, confirmPassword) =>
@@ -22,7 +24,10 @@ export default function RegisterForm() {
       validatePassword(password) &&
       validateConfirmPassword(password, confirmPassword)
     ) {
+      setIsLoading(true);
       await registerUser(email, password, username);
+      setIsLoading(false);
+      onRegisterSuccessfully(email);
     }
   };
 
