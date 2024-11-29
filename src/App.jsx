@@ -5,6 +5,7 @@ import Home from './components/pages/home/Home';
 import './index.css';
 import { Route, Routes } from 'react-router-dom';
 import Loading from './components/templates/common/loading/Loading';
+import EmailConfirmation from './components/pages/authentication/EmailConfirmation';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ const AppContent = () => {
         <Route path="/login" element={<Authentication mode="login" />} />
         <Route path="/register" element={<Authentication mode="register" />} />
         <Route path="/verify" element={<Authentication mode="verify" />} />
+        <Route path="/email-confirmation" element={<EmailConfirmation />} />
       </Routes>
     </>
   );

@@ -25,3 +25,11 @@ export const loginUser = async (email, password) => {
     console.error(error);
   }
 };
+
+export const verifyAccount = async (token) => {
+  try {
+    await axios.post(`${baseUrl}/api/auth/verify?token=${token}`);
+  } catch (error) {
+    console.error(error);
+  }
+};
