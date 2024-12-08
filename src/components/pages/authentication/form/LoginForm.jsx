@@ -2,19 +2,26 @@ import React, { useState } from 'react';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import InputText from '../../../controls/input-text/InputText';
 import { loginUser } from '../../../../api/auth.service';
+import { useLoading } from '../../../../context/LoadingProvider';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const { setIsLoading } = useLoading();
 
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
   const validatePassword = (password) => password.length >= 6;
 
   const submit = async () => {
     if (validateEmail(email) && validatePassword(password)) {
+      setIsLoading(true);
       const token = await loginUser(email, password);
-
-      console.log(token);
+      if (token) {
+        localStorage.setItem('access_token', token);
+        window.location.href = '/';
+      }
+      setIsLoading(false);
     }
   };
 
