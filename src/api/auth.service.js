@@ -26,7 +26,7 @@ export const loginUser = async (email, password) => {
 
 export const verifyAccount = async (token) => {
   try {
-    await apiClient.post('/auth/verify?token=${token}');
+    await apiClient.post(`/auth/verify?token=${token}`);
   } catch (error) {
     console.error(error);
   }
