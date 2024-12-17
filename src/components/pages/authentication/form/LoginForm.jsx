@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import InputText from '../../../controls/input-text/InputText';
 import { loginUser } from '../../../../api/auth.service';
 import { useLoading } from '../../../../context/LoadingProvider';
+import { useLocation } from 'react-router-dom';
+import { useAlert } from '../../../../context/AlertProvider';
+import { getAccessToken } from '../../../../api/config/tokenManager';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
   const { setIsLoading } = useLoading();
+  const location = useLocation();
+  const { showAlert } = useAlert();
 
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
   const validatePassword = (password) => password.length >= 6;
+
+  useEffect(() => {
+    const accessToken = getAccessToken();
+    if (accessToken) {
+      window.location.href = '/';
+      return;
+    }
+    const message = location.state?.message;
+    if (message) {
+      showAlert(message, 'error');
+    }
+  }, [location.state, showAlert]);
 
   const submit = async () => {
     if (validateEmail(email) && validatePassword(password)) {

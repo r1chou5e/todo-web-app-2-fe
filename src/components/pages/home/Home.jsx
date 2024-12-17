@@ -4,21 +4,33 @@ import TodoList from '../../templates/todo-list/TodoList';
 import { getRawAccessToken } from '../../../api/config/tokenManager';
 import { getUserProfileByAccessToken } from '../../../api/user.service';
 import { useLoading } from '../../../context/LoadingProvider';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
   const { setIsLoading } = useLoading();
   const [profile, setProfile] = useState({});
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = getRawAccessToken();
-      setIsLoading(true);
       if (accessToken) {
-        const profileInfo = await getUserProfileByAccessToken(accessToken);
-        setProfile(profileInfo);
+        try {
+          setIsLoading(true);
+          const profileInfo = await getUserProfileByAccessToken(accessToken);
+          setProfile(profileInfo);
+          return;
+        } catch (error) {
+          navigate('/login', {
+            state: { message: 'Your session has expired!' },
+          });
+        } finally {
+          setIsLoading(false);
+        }
       } else {
-        window.location.href = '/login';
+        navigate('/login', {
+          state: { message: 'Your session has expired!' },
+        });
       }
-      setIsLoading(false);
     };
 
     fetchData();
