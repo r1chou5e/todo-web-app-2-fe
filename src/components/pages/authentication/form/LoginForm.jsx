@@ -3,9 +3,12 @@ import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import InputText from '../../../controls/input-text/InputText';
 import { loginUser } from '../../../../api/auth.service';
 import { useLoading } from '../../../../context/LoadingProvider';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAlert } from '../../../../context/AlertProvider';
-import { getAccessToken } from '../../../../api/config/tokenManager';
+import {
+  getAccessToken,
+  setAccessToken,
+} from '../../../../api/config/tokenManager';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -17,11 +20,12 @@ export default function LoginForm() {
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
   const validatePassword = (password) => password.length >= 6;
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const accessToken = getAccessToken();
     if (accessToken) {
       window.location.href = '/';
-      return;
     }
     const message = location.state?.message;
     if (message) {
@@ -34,7 +38,7 @@ export default function LoginForm() {
       setIsLoading(true);
       const token = await loginUser(email, password);
       if (token) {
-        localStorage.setItem('access_token', token);
+        setAccessToken(token);
         window.location.href = '/';
       }
       setIsLoading(false);

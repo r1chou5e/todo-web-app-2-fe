@@ -19,3 +19,17 @@ export const loginUser = async (email, password) => {
 export const verifyAccount = async (token) => {
   await apiClient.post(`/auth/verify?token=${token}`);
 };
+
+export const logoutUser = async (email) => {
+  await apiClient.put(
+    '/auth/logout',
+    {
+      email,
+    },
+    {
+      headers: {
+        'Auth-Required': true,
+      },
+    }
+  );
+};

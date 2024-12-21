@@ -10,9 +10,9 @@ apiClient.interceptors.request.use(
   (config) => {
     const isSecure = config?.headers?.['Auth-Required'];
     if (isSecure) {
-      const token = getAccessToken();
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      const accessToken = getAccessToken();
+      if (accessToken) {
+        config.headers.Authorization = accessToken;
       } else {
         window.location.href = '/login';
         return Promise.reject(new Error('No token available'));

@@ -1,6 +1,15 @@
-import { PopoverGroup } from '@headlessui/react';
+import { PopoverGroup, Popover } from '@headlessui/react';
+import { logoutUser } from '../../../api/auth.service';
+import { removeAccessToken } from '../../../api/config/tokenManager';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header({ profile }) {
+  const navigate = useNavigate();
+  const logout = async () => {
+    await logoutUser(profile.email);
+    removeAccessToken();
+    navigate('/login');
+  };
   return (
     <header className="bg-white">
       <nav
@@ -103,9 +112,41 @@ export default function Header({ profile }) {
               Log in <span aria-hidden="true">&rarr;</span>
             </a>
           ) : (
-            <p className="text-sm font-semibold leading-6 text-gray-900">
-              {profile?.username}
-            </p>
+            <Popover className="relative">
+              {({ open }) => (
+                <>
+                  <Popover.Button className="flex items-center gap-2">
+                    <p className="text-sm font-semibold leading-6 text-gray-900">
+                      {profile?.username}
+                    </p>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className={`w-5 h-5 transition-transform ${
+                        open ? 'rotate-180' : ''
+                      }`}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                      />
+                    </svg>
+                  </Popover.Button>
+                  <Popover.Panel className="absolute right-0 z-10 mt-2 w-48 rounded-md bg-white shadow-lg">
+                    <button
+                      onClick={logout}
+                      className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </Popover.Panel>
+                </>
+              )}
+            </Popover>
           )}
         </div>
       </nav>
