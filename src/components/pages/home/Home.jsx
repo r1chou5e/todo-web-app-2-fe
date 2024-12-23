@@ -4,7 +4,7 @@ import TodoList from '../../templates/todo-list/TodoList';
 import {
   getRawAccessToken,
   removeAccessToken,
-} from '../../../api/config/tokenManager';
+} from '../../../api/config/storageManager';
 import { getUserProfileByAccessToken } from '../../../api/user.service';
 import { useLoading } from '../../../context/LoadingProvider';
 import { useNavigate } from 'react-router-dom';

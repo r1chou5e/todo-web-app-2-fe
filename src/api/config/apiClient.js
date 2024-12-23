@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { getAccessToken } from './tokenManager';
+import { getAccessToken, removeAccessToken } from './storageManager';
+import { logoutUser } from '../auth.service';
 
 const apiClient = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
@@ -30,7 +31,7 @@ apiClient.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
     const { response } = error;
     if (response) {
       const { status, data } = response;
@@ -46,6 +47,7 @@ apiClient.interceptors.response.use(
             JSON.stringify({ ...customError, type: 'Bad Request' })
           );
         case 401:
+          removeAccessToken();
           window.location.href = '/login';
           throw new Error(
             JSON.stringify({ ...customError, type: 'Unauthorized' })

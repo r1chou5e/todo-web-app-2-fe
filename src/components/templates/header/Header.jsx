@@ -1,6 +1,6 @@
 import { PopoverGroup, Popover } from '@headlessui/react';
 import { logoutUser } from '../../../api/auth.service';
-import { removeAccessToken } from '../../../api/config/tokenManager';
+import { removeAccessToken } from '../../../api/config/storageManager';
 import { useNavigate } from 'react-router-dom';
 
 export default function Header({ profile }) {

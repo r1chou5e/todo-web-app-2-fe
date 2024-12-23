@@ -1,4 +1,5 @@
 const TOKEN_KEY = 'access_token';
+const EMAIL = 'email';
 
 export const getAccessToken = () => localStorage.getItem(TOKEN_KEY);
 
@@ -13,4 +14,14 @@ export const setAccessToken = (token) => {
 
 export const removeAccessToken = () => {
   localStorage.removeItem(TOKEN_KEY);
+};
+
+export const getEmail = () => localStorage.getItem(EMAIL);
+
+export const setEmail = (email) => {
+  localStorage.setItem(EMAIL, email);
+};
+
+export const removeEmail = () => {
+  localStorage.removeItem(EMAIL);
 };

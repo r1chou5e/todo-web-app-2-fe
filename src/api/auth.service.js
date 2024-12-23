@@ -1,4 +1,5 @@
 import apiClient from './config/apiClient';
+import { getEmail } from './config/storageManager';
 
 export const registerUser = async (email, password, username) => {
   await apiClient.post('/auth/register', {
@@ -20,7 +21,8 @@ export const verifyAccount = async (token) => {
   await apiClient.post(`/auth/verify?token=${token}`);
 };
 
-export const logoutUser = async (email) => {
+export const logoutUser = async () => {
+  const email = getEmail();
   await apiClient.put(
     '/auth/logout',
     {

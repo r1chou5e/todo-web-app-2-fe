@@ -8,7 +8,7 @@ import { useAlert } from '../../../../context/AlertProvider';
 import {
   getAccessToken,
   setAccessToken,
-} from '../../../../api/config/tokenManager';
+} from '../../../../api/config/storageManager';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -38,6 +38,7 @@ export default function LoginForm() {
       setIsLoading(true);
       const token = await loginUser(email, password);
       if (token) {
+        setEmail(email);
         setAccessToken(token);
         window.location.href = '/';
       }
