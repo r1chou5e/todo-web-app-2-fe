@@ -3,7 +3,7 @@ import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import InputText from '../../../controls/input-text/InputText';
 import { loginUser } from '../../../../api/auth.service';
 import { useLoading } from '../../../../context/LoadingProvider';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useAlert } from '../../../../context/AlertProvider';
 import {
   getAccessToken,
@@ -19,8 +19,6 @@ export default function LoginForm() {
 
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
   const validatePassword = (password) => password.length >= 6;
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const accessToken = getAccessToken();

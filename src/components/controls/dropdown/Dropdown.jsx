@@ -8,9 +8,10 @@ import {
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx';
 import { useState, useRef, useEffect } from 'react';
+import { getSubtypesByTypeCode } from '../../../api/type.service';
 
-export default function Dropdown({ items, value, onChange }) {
-  // Tìm item tương ứng với value truyền vào
+export default function Dropdown({ items = [], value, onChange, typeCode }) {
+  const [options, setOptions] = useState(items);
   const [selected, setSelected] = useState(
     items.find((item) => item.value === String(value)) || items[0]
   );
@@ -25,11 +26,30 @@ export default function Dropdown({ items, value, onChange }) {
 
   // Update selected item khi prop value thay đổi
   useEffect(() => {
-    const foundItem = items.find((item) => item.value === String(value));
+    const foundItem = options.find((item) => item.value === String(value));
     if (foundItem) {
       setSelected(foundItem);
     }
-  }, [value, items]);
+  }, [value, options]);
+
+  // Gọi API khi typeCode thay đổi
+  useEffect(() => {
+    if (typeCode) {
+      const fetchData = async () => {
+        try {
+          const data = await getSubtypesByTypeCode(typeCode);
+          const formattedData = data.subtypes.map((subtype) => ({
+            label: subtype.subtypeName,
+            value: subtype.subtypeValue,
+          }));
+          setOptions(formattedData);
+        } catch (error) {
+          console.error('Error fetching subtypes:', error);
+        }
+      };
+      fetchData();
+    }
+  }, [typeCode]);
 
   return (
     <div>
@@ -63,12 +83,12 @@ export default function Dropdown({ items, value, onChange }) {
             'absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'
           )}
         >
-          {items.length === 0 && (
+          {options.length === 0 && (
             <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
               No results found.
             </div>
           )}
-          {items.map((item, index) => (
+          {options.map((item, index) => (
             <ComboboxOption
               key={index}
               value={item}

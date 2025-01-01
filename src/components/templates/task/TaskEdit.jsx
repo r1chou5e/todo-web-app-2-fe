@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import TimePicker from '../../controls/time-picker/TimePicker';
 import Dropdown from '../../controls/dropdown/Dropdown';
-import { TaskTypes } from '../../../constants';
 
 export default function TaskEdit({
   id,
@@ -28,10 +27,12 @@ export default function TaskEdit({
   };
 
   return (
-    <div className="bg-[#FFFFFF] p-4 rounded-xl shadow-lg">
+    <div className="bg-[#FFFFFF] p-4 rounded-xl shadow-lg mt-4">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-lg">Edit task</span>
+          <span className="font-bold text-lg">
+            {addMode ? 'Add task' : 'Edit task'}
+          </span>
         </div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -53,19 +54,19 @@ export default function TaskEdit({
         type="text"
         value={editTitle}
         onChange={(e) => setEditTitle(e.target.value)}
-        placeholder="Edit title"
+        placeholder="Title"
         className="w-full mb-2 p-2 border rounded-lg"
       />
       <textarea
         value={editDescription}
         onChange={(e) => setEditDescription(e.target.value)}
-        placeholder="Edit description"
+        placeholder="Description"
         className="w-full mb-2 p-2 border rounded-lg"
       />
       <div className="flex gap-3">
         <TimePicker setValue={setEditTime} value={editTime} />
         <Dropdown
-          items={Object.values(TaskTypes)}
+          typeCode="T001"
           value={editType}
           onChange={(e) => setEditType(e)}
         />
