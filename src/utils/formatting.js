@@ -19,3 +19,14 @@ export const timeDiffFromNow = (timeString) => {
     diffHours,
   };
 };
+
+export const convertToLocalDateTime = (inputTime) => {
+  const now = new Date();
+  const [hours, minutes] = inputTime.split(':').map(Number);
+  const targetDate = new Date(now);
+
+  targetDate.setHours(hours, minutes, 0, 0); // Đặt giờ, phút cho targetDate
+  if (targetDate <= now) targetDate.setDate(targetDate.getDate() + 1); // Nếu nhỏ hơn hiện tại, cộng thêm 1 ngày
+
+  return targetDate.toISOString().slice(0, 19); // Trả về định dạng "yyyy-MM-ddTHH:mm:ss"
+};

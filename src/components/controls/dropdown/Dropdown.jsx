@@ -10,7 +10,13 @@ import clsx from 'clsx';
 import { useState, useRef, useEffect } from 'react';
 import { getSubtypesByTypeCode } from '../../../api/type.service';
 
-export default function Dropdown({ items = [], value, onChange, typeCode }) {
+export default function Dropdown({
+  items = [],
+  value,
+  onChange,
+  typeCode,
+  placeholder,
+}) {
   const [options, setOptions] = useState(items);
   const [selected, setSelected] = useState(
     items.find((item) => item.value === String(value)) || items[0]
@@ -57,7 +63,7 @@ export default function Dropdown({ items = [], value, onChange, typeCode }) {
         value={selected}
         onChange={(item) => {
           setSelected(item);
-          onChange(item.value); // Trả về giá trị (number) khi thay đổi
+          onChange(item.value);
         }}
       >
         <div className="relative">
@@ -67,6 +73,8 @@ export default function Dropdown({ items = [], value, onChange, typeCode }) {
               'w-full rounded-lg border border-gray-300 bg-white py-2.5 pr-8 pl-3 text-sm text-gray-900',
               'focus:ring-1 focus:border-gray-500'
             )}
+            readOnly
+            placeholder={placeholder}
             displayValue={(item) => item?.label}
           />
           <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2">

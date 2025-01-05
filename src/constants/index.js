@@ -5,6 +5,7 @@ export const TaskTypeColorVariants = {
   Personal: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
 };
 
+// T001: Task types
 export const TaskTypes = {
   Study: {
     value: '1',

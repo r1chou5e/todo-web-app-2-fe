@@ -3,8 +3,13 @@ import Task from '../task/Task';
 import TaskEdit from '../task/TaskEdit';
 import { TASKS } from '../../../mock';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { getSubtypeId } from '../../../api/type.service';
+import { convertToLocalDateTime } from '../../../utils/formatting';
+import { createNewTask } from '../../../api/task.service';
+import { useLoading } from '../../../context/LoadingProvider';
 
 export default function TodoList() {
+  const { setIsLoading } = useLoading();
   const [tasks, setTasks] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [newTask, setNewTask] = useState(null);
@@ -45,16 +50,34 @@ export default function TodoList() {
       title: '',
       description: '',
       time: '00:00',
-      type: 'General',
+      type: '',
       editMode: true,
     });
   };
 
-  const saveTask = (taskData) => {
-    const taskToAdd = { ...newTask, ...taskData, editMode: false };
-    setTasks((prevTasks) => [...prevTasks, taskToAdd]);
-    setIsAdding(false);
-    setNewTask(null);
+  const saveTask = async (taskData) => {
+    const { typeCode, subtypeValue } = taskData;
+
+    setIsLoading(true);
+
+    const subTypeId = await getSubtypeId(typeCode, subtypeValue);
+
+    const body = {
+      ...taskData,
+      subTypeId,
+      todoListId: 1,
+      dueDate: convertToLocalDateTime(taskData.time),
+    };
+
+    try {
+      await createNewTask(body);
+      const taskToAdd = { ...newTask, ...taskData, editMode: false };
+      setTasks((prevTasks) => [...prevTasks, taskToAdd]);
+      setIsAdding(false);
+      setNewTask(null);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const cancelAddTask = () => {
@@ -164,14 +187,6 @@ export default function TodoList() {
               </svg>
               Add Task
             </button>
-            <div className="flex gap-2 justify-end">
-              <button className="bg-white border border-blue-500 text-blue-500 py-2 px-4 rounded-xl transition-all duration-300 hover:bg-gray-50 transform shadow-lg">
-                Discard
-              </button>
-              <button className="bg-blue-500 text-white py-2 px-4 rounded-xl transition-all duration-300 hover:bg-blue-600 transform shadow-lg">
-                Save
-              </button>
-            </div>
           </div>
         )}
       </div>

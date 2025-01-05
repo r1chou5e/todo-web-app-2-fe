@@ -13,6 +13,7 @@ export default function TaskEdit({
   onRemove,
   addMode,
 }) {
+  const typeCode = 'T001';
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
   const [editTime, setEditTime] = useState(time); // TODO: cần sử lý logic khi chọn giờ thì phải là giờ sau giờ hiện tại, nếu giờ là giờ nhỏ hơn giờ hiện tại thì là giờ hôm sau
@@ -23,6 +24,8 @@ export default function TaskEdit({
       title: editTitle,
       description: editDescription,
       time: editTime,
+      typeCode,
+      subtypeValue: editType,
     });
   };
 
@@ -66,8 +69,9 @@ export default function TaskEdit({
       <div className="flex gap-3">
         <TimePicker setValue={setEditTime} value={editTime} />
         <Dropdown
-          typeCode="T001"
+          typeCode={typeCode}
           value={editType}
+          placeholder={'Select a type'}
           onChange={(e) => setEditType(e)}
         />
       </div>
@@ -84,7 +88,7 @@ export default function TaskEdit({
           onClick={handleSave}
           className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-xl"
         >
-          {addMode ? 'Confirm' : 'Update'}
+          Save
         </button>
         <div></div>
       </div>
