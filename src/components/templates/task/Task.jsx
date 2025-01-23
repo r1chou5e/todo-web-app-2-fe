@@ -1,13 +1,25 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import RoundCheckbox from '../../controls/checkbox/RoundCheckbox';
 import Tag from '../../controls/tag/Tag';
 import { TaskTypeColorVariants, TaskTypes } from '../../../constants';
 import { getLabelFromValue } from '../../../utils/mapping';
 import './style/Task.css';
 import { timeDiffFromNow } from '../../../utils/formatting';
+import { updateTaskStatus } from '../../../api/task.service';
 
-export default function Task({ id, title, description, type, time, onEdit }) {
+export default function Task({
+  id,
+  title,
+  description,
+  type,
+  time,
+  completed,
+  onUpdateStatus,
+  onEdit,
+}) {
   const taskRef = useRef(null);
+
+  const [completedVal, setCompletedVal] = useState(completed);
 
   const taskAlert = () => {
     return timeDiffFromNow(time).diffSeconds < 0;
@@ -27,7 +39,14 @@ export default function Task({ id, title, description, type, time, onEdit }) {
       className="task-hover relative flex items-center gap-4 bg-[#FFFFFF] px-4 py-3 rounded-xl shadow-lg min-h-[72px] justify-between transition-transform transform hover:scale-105 group"
     >
       <div className="flex items-center gap-4">
-        <RoundCheckbox />
+        <RoundCheckbox
+          setValue={async (value) => {
+            setCompletedVal(value);
+            await updateTaskStatus(id, value);
+            onUpdateStatus();
+          }}
+          value={completedVal}
+        />
         <div className="flex flex-col justify-center">
           <div className="flex gap-2">
             <p className="text-black text-base font-medium leading-normal line-clamp-1">

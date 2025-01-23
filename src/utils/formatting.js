@@ -30,3 +30,7 @@ export const convertToLocalDateTime = (inputTime) => {
 
   return targetDate.toISOString().slice(0, 19); // Trả về định dạng "yyyy-MM-ddTHH:mm:ss"
 };
+
+export const getTimeFromLocalDateTime = (localDateTime) => {
+  return new Date(localDateTime).toLocaleTimeString().slice(0, 5);
+};

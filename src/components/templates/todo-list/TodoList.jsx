@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import Task from '../task/Task';
 import TaskEdit from '../task/TaskEdit';
-import { TASKS } from '../../../mock';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { getSubtypeId } from '../../../api/type.service';
-import { convertToLocalDateTime } from '../../../utils/formatting';
-import { createNewTask } from '../../../api/task.service';
+import {
+  convertToLocalDateTime,
+  getTimeFromLocalDateTime,
+} from '../../../utils/formatting';
+import { createNewTask, getTasksByTodoListId } from '../../../api/task.service';
 import { useLoading } from '../../../context/LoadingProvider';
 
 export default function TodoList() {
@@ -14,13 +16,28 @@ export default function TodoList() {
   const [isAdding, setIsAdding] = useState(false);
   const [newTask, setNewTask] = useState(null);
 
+  const loadInit = async () => {
+    setIsLoading(true);
+    try {
+      const { taskList } = await getTasksByTodoListId(1);
+      const tasks = taskList.map((task) => ({
+        ...task,
+        time: getTimeFromLocalDateTime(task.dueDate),
+        editMode: false,
+      }));
+      setTasks(tasks);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    setTasks(TASKS);
+    loadInit();
   }, []);
 
   const showEdit = (id) => {
     checkOtherShowEdit();
-    const task = tasks.find((task) => task.id === id);
+    const task = tasks.find((task) => task.taskId.toString() === id);
     task.editMode = true;
     setTasks([...tasks]);
   };
@@ -37,7 +54,7 @@ export default function TodoList() {
   };
 
   const closeEdit = (id) => {
-    const task = tasks.find((task) => task.id === id);
+    const task = tasks.find((task) => task.taskId.toString() === id);
     task.editMode = false;
     setTasks([...tasks]);
   };
@@ -71,8 +88,7 @@ export default function TodoList() {
 
     try {
       await createNewTask(body);
-      const taskToAdd = { ...newTask, ...taskData, editMode: false };
-      setTasks((prevTasks) => [...prevTasks, taskToAdd]);
+      loadInit();
       setIsAdding(false);
       setNewTask(null);
     } finally {
@@ -112,8 +128,8 @@ export default function TodoList() {
                 >
                   {tasks.map((task, index) => (
                     <Draggable
-                      key={task.id}
-                      draggableId={task.id.toString()}
+                      key={task.taskId}
+                      draggableId={task.taskId.toString()}
                       index={index}
                     >
                       {(provided) => (
@@ -124,21 +140,23 @@ export default function TodoList() {
                         >
                           {task.editMode ? (
                             <TaskEdit
-                              id={task.id}
+                              id={task.taskId.toString()}
                               title={task.title}
                               description={task.description}
                               time={task.time}
-                              type={task.type}
+                              type={task.subTypeId.toString()}
                               onCancel={closeEdit}
                               onSave={saveTask}
                             />
                           ) : (
                             <Task
-                              id={task.id}
+                              id={task.taskId.toString()}
                               title={task.title}
                               description={task.description}
                               time={task.time}
-                              type={task.type}
+                              type={task.subTypeId.toString()}
+                              completed={task.completed}
+                              onUpdateStatus={loadInit}
                               onEdit={showEdit}
                             />
                           )}

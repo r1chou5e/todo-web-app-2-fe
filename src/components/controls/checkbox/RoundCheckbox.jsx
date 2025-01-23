@@ -2,13 +2,16 @@ import { Checkbox } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/16/solid';
 import { useState } from 'react';
 
-export default function RoundCheckbox() {
-  const [enabled, setEnabled] = useState(false);
+export default function RoundCheckbox({ value, setValue }) {
+  const [enabled, setEnabled] = useState(value);
 
   return (
     <Checkbox
       checked={enabled}
-      onChange={setEnabled}
+      onChange={() => {
+        setEnabled(!enabled);
+        setValue(!enabled);
+      }}
       className={`relative flex items-center justify-center h-6 w-6 rounded-full ${
         enabled
           ? 'bg-black hover:bg-gray-600 ring-white/10'

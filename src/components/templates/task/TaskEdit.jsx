@@ -4,10 +4,10 @@ import Dropdown from '../../controls/dropdown/Dropdown';
 
 export default function TaskEdit({
   id,
-  title,
-  description,
-  time,
-  type,
+  title = '',
+  description = '',
+  time = '00:00',
+  type = '',
   onSave,
   onCancel,
   onRemove,
@@ -16,7 +16,7 @@ export default function TaskEdit({
   const typeCode = 'T001';
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
-  const [editTime, setEditTime] = useState(time); // TODO: cần sử lý logic khi chọn giờ thì phải là giờ sau giờ hiện tại, nếu giờ là giờ nhỏ hơn giờ hiện tại thì là giờ hôm sau
+  const [editTime, setEditTime] = useState(time);
   const [editType, setEditType] = useState(type);
 
   const handleSave = () => {

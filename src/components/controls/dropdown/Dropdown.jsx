@@ -12,14 +12,14 @@ import { getSubtypesByTypeCode } from '../../../api/type.service';
 
 export default function Dropdown({
   items = [],
-  value,
+  value = '',
   onChange,
-  typeCode,
-  placeholder,
+  typeCode = '',
+  placeholder = 'Select an option',
 }) {
-  const [options, setOptions] = useState(items);
+  const [options, setOptions] = useState(items || []);
   const [selected, setSelected] = useState(
-    items.find((item) => item.value === String(value)) || items[0]
+    options.find((item) => item.value.toString() === value) || options[0]
   );
   const inputRef = useRef(null);
   const [inputWidth, setInputWidth] = useState('auto');
@@ -32,11 +32,11 @@ export default function Dropdown({
 
   // Update selected item khi prop value thay đổi
   useEffect(() => {
-    const foundItem = options.find((item) => item.value === String(value));
+    const foundItem = options.find((item) => item.value.toString() === value);
     if (foundItem) {
       setSelected(foundItem);
     }
-  }, [value, options]);
+  }, [value]);
 
   // Gọi API khi typeCode thay đổi
   useEffect(() => {
@@ -49,18 +49,21 @@ export default function Dropdown({
             value: subtype.subtypeValue,
           }));
           setOptions(formattedData);
+          setSelected(
+            formattedData.find((item) => item.value.toString() === value)
+          );
         } catch (error) {
           console.error('Error fetching subtypes:', error);
         }
       };
       fetchData();
     }
-  }, [typeCode]);
+  }, []);
 
   return (
     <div>
       <Combobox
-        value={selected}
+        value={selected || {}}
         onChange={(item) => {
           setSelected(item);
           onChange(item.value);
@@ -70,8 +73,7 @@ export default function Dropdown({
           <ComboboxInput
             ref={inputRef}
             className={clsx(
-              'w-full rounded-lg border border-gray-300 bg-white py-2.5 pr-8 pl-3 text-sm text-gray-900',
-              'focus:ring-1 focus:border-gray-500'
+              'w-full rounded-lg border border-gray-300 bg-white py-2.5 pr-8 pl-3 text-sm text-gray-900'
             )}
             readOnly
             placeholder={placeholder}
@@ -88,7 +90,7 @@ export default function Dropdown({
         <ComboboxOptions
           style={{ width: inputWidth }}
           className={clsx(
-            'absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'
+            'absolute z-10 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg focus:outline-none sm:text-sm'
           )}
         >
           {options.length === 0 && (
