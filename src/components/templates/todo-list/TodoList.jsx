@@ -9,6 +9,7 @@ import {
 } from '../../../utils/formatting';
 import { createNewTask, getTasksByTodoListId } from '../../../api/task.service';
 import { useLoading } from '../../../context/LoadingProvider';
+import { sortTodoList } from '../../../api/todoList.service';
 
 export default function TodoList() {
   const { setIsLoading } = useLoading();
@@ -101,14 +102,25 @@ export default function TodoList() {
     setNewTask(null);
   };
 
-  const onDragEnd = (result) => {
+  const onDragEnd = async (result) => {
     if (!result.destination) return;
 
     const updatedTasks = [...tasks];
     const [removed] = updatedTasks.splice(result.source.index, 1);
     updatedTasks.splice(result.destination.index, 0, removed);
 
-    setTasks(updatedTasks);
+    setIsLoading(true);
+
+    try {
+      await sortTodoList(1, {
+        sortedTasks: updatedTasks.map((t) => ({
+          taskId: t.taskId,
+          sequence: updatedTasks.indexOf(t) + 1,
+        })),
+      });
+    } finally {
+      loadInit();
+    }
   };
 
   return (
